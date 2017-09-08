@@ -19,7 +19,7 @@
     D Main            PI
      D  pdsList                            CONST LIKEDS( gdsList )
 
-     D i               S              5U 0 INZ
+     D i               S              3U 0 INZ
      *-------------------------------------------------------------------------
 
       For i=1 To pdsList.bCount;
