@@ -1,32 +1,19 @@
-
-     *  00000000                        BRC      31.10.2016
-
-     H ALWNULL( *USRCTL ) MAIN( Main ) AUT( *USE )
-     H DFTACTGRP( *NO ) ACTGRP( *NEW ) DEBUG( *YES ) USRPRF( *OWNER )
-     H DATFMT( *ISO ) DATEDIT( *YMD- ) TIMFMT( *ISO. ) DECEDIT( '0,' )
-
-     *#########################################################################
-     *- Definitionen
-     *#########################################################################
-
-     * Programm Prototype -----------------------------------------------------
+     * Program prototype ------------------------------------------------------
      D Main            PR                  EXTPGM( 'LISTSAMPLE' )
      D  pdsList                             CONST LIKEDS( gdsList )
 
-     * Globale Konstanten -----------------------------------------------------
+     * Global constants -------------------------------------------------------
      D TRUE            C                   *ON
      D FALSE           C                   *OFF
 
-     * Globale Variablen ------------------------------------------------------
-     D INLR            S               *   INZ( %ADDR(*INLR) )
-     D ExitProgram     S               N   BASED( INLR )
+     * Global variables -------------------------------------------------------
      D gdsList         DS                  QUALIFIED
      D  bCount                        2B 0  INZ
      D  arCustomers                  10A    DIM( 16 ) INZ
 
 
      *#########################################################################
-     *- MAIN - Programm
+     *- MAIN - Program
      *#########################################################################
     P Main            B
     D Main            PI
@@ -39,8 +26,6 @@
       // Do something with pdsList.arCustomers(i)
       EndFor;
 
-      // Programm beenden
-       ExitProgram=TRUE;
        Return;
 
     P                 E
