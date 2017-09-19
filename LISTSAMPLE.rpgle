@@ -8,7 +8,7 @@
 
      * Global variables -------------------------------------------------------
      D gdsList         DS                  QUALIFIED
-     D  bCount                        2B 0  INZ
+     D  uCount                        5U 0  INZ
      D  arCustomers                  10A    DIM( 16 ) INZ
 
 
@@ -19,10 +19,10 @@
     D Main            PI
      D  pdsList                            CONST LIKEDS( gdsList )
 
-     D i               S              3U 0 INZ
+     D i               S              5U 0 INZ
      *-------------------------------------------------------------------------
 
-      For i=1 To pdsList.bCount;
+      For i=1 To pdsList.uCount;
       // Do something with pdsList.arCustomers(i)
       EndFor;
 
