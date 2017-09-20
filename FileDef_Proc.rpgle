@@ -13,7 +13,7 @@
          If %EoF ( FILE );
            Leave;
          EndIf;
-		 Dsply dsFile.Field1
+         Dsply dsFile.Field1
        EndDo;
        Close FILE;
        Return;
