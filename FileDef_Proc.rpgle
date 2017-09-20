@@ -16,6 +16,5 @@
          Dsply dsFile.Field1
        EndDo;
        Close FILE;
-       Return;
 
     P                 E
