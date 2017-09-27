@@ -8,7 +8,7 @@
     D  ParmLenText                  10I 0  CONST
     D  ParmMsgId                     7A    CONST
     D  ParmMsgF                     20A    CONST
-    D  ParmError                           LIKEDS( gdsAPIError )
+    D  ParmError                           LIKEDS( dsAPIError_Template )
 
      /INCLUDE *LIBL/QRPGLECPY,ERRORDS
     D VarText         S          32765A   VARYING
