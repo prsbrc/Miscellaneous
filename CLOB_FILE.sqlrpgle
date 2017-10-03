@@ -1,5 +1,5 @@
      D CLOB_File       S                   SQLTYPE(CLOB_FILE) CCSID(1208)
-	 D Message         S          32000A   VARYING INZ 
+     D Message         S          32000A   VARYING INZ 
      D MailAdress      S            256A   VARYING INZ
       *-------------------------------------------------------------------------
 
