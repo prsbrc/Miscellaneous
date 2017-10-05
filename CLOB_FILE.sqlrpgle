@@ -1,6 +1,6 @@
 DCL-S CLOB_File SQLTYPE(CLOB_FILE) CCSID(1208);
 DCL-S aMailAdress VARCHAR(256) INZ;
-DCL-S Message VARCHAR(32000) INZ;
+DCL-S Message VARCHAR(128) INZ;
 //-------------------------------------------------------------------------
 
  Message = 'This is a easy simple text';
