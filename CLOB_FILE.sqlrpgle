@@ -1,5 +1,5 @@
 DCL-S CLOB_File SQLTYPE(CLOB_FILE) CCSID(1208);
-DCL-S aMailAdress VARCHAR(256) INZ;
+DCL-S MailAdress VARCHAR(128) INZ;
 DCL-S Message VARCHAR(128) INZ;
 //-------------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ DCL-S Message VARCHAR(128) INZ;
               ON (B.WOS1USRP = USER AND B.WOS1DDEN = A.USERID AND
                   B.WOS1DDGN = A.ADDRESS)
            FETCH FIRST 1 ROW ONLY;
- System('SNDSMTPEMM RCP(('+''''+%Trim(aMailAdress)+''''+')) '+
-        'SUBJECT(''DCW-Import Druckerei'') '+
+ System('SNDSMTPEMM RCP(('+''''+%Trim(MailAdress)+''''+')) '+
+        'SUBJECT(''Sample'') '+
         'NOTE('+''''+%Char(%TimeStamp())+''''+') '+
-        'ATTACH(''/tmp/DCW_Druckerei.txt'') CHARSET(*UTF8)');
+        'ATTACH(''/tmp/sample.txt'') CHARSET(*UTF8)');
