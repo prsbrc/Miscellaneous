@@ -9,7 +9,7 @@ DCL-S Message VARCHAR(128) INZ;
  CLOB_File_NAME = '/tmp/sample.txt';
  CLOB_File_NL = %Len(%Trim(CLOB_File_NAME));
  CLOB_File_FO = SQFOVR;
- Exec SQL SET :CLOB_File = TRIM(CAST(:Message AS CLOB(16K) CCSID 1208));
+ Exec SQL SET :CLOB_File = TRIM(CAST(:Message AS CLOB(128) CCSID 1208));
 
  // read mailadress and send message
  Exec SQL SELECT STRIP(A.SMTPUID) CONCAT '@' CONCAT STRIP(A.DOMROUTE)
