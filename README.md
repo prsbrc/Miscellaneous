@@ -7,3 +7,5 @@ RLSNSURG shows how to reenable disabled userprofiles for the NETSERVER shares.
 FileDef_Proc shows how to declare a file within an procedure.
 
 DSPUIMWDW shows how to use API QUILNGTX for a easy window.
+
+CLCEAP is an example how to calculate a checkdigit with mod10
