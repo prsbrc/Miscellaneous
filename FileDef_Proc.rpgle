@@ -1,20 +1,29 @@
-    P PROC            B
-    D PROC            PI
+**FREE
+DCL-PROC Procedure;
 
-     FFILE      IF   E           K DISK    USROPN
+ DCL-F FILENAME USROPN USAGE(*INPUT) EXTDESC(FILENAME) EXTMBR(Member);
 
-     D dsFile          DS                  LIKEREC( FILE_REC )
-     *-------------------------------------------------------------------------
+ DCL-DS RecordDS LIKEREC(FILEREC :*ALL) INZ;
+ DCL-S Member CHAR(10) INZ;
+//-------------------------------------------------------------------------
 
-       Open FILE;
-       SetLL ('R' :'5') FILE;
-       DoW Not %EoF( FILE );
-         ReadE ('R') FILE_REC dsFile;
-         If %EoF ( FILE );
-           Leave;
-         EndIf;
-         Dsply dsFile.Field1
-       EndDo;
-       Close FILE;
+ Member = 'Member1';
+ 
+ If Not %Open(FileName);
+   Open FileName;
+ EndIf;
 
-    P                 E
+ SetLL ('R' :'5') FileRec;
+ DoW Not %EoF( FileName );
+   ReadE ('R') FileRec RecordDS;
+   If %EoF ( FileName );
+     Leave;
+   EndIf;
+   Dsply RecordDS.Field1
+ EndDo;
+       
+ If %Open(FileName);
+   Close FileName;
+ EndIf;
+
+END-PROC;
