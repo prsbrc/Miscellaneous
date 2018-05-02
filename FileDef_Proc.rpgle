@@ -1,12 +1,13 @@
 **FREE
 DCL-PROC Procedure;
 
- DCL-F FILENAME USROPN USAGE(*INPUT) EXTDESC(FILENAME) EXTMBR(Member);
+ DCL-F FILENAME USROPN USAGE(*INPUT) EXTFILE(File) EXTDESC(LIB/FILE) EXTMBR(Member);
 
  DCL-DS RecordDS LIKEREC(FILEREC :*ALL) INZ;
  DCL-S Member CHAR(10) INZ;
 //-------------------------------------------------------------------------
 
+ File   = 'LIB/FILE';
  Member = 'Member1';
  
  If Not %Open(FileName);
