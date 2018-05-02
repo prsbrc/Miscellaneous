@@ -4,6 +4,7 @@ DCL-PROC Procedure;
  DCL-F FILENAME USROPN USAGE(*INPUT) EXTFILE(File) EXTDESC(LIB/FILE) EXTMBR(Member);
 
  DCL-DS RecordDS LIKEREC(FILEREC :*ALL) INZ;
+ DCL-S File   CHAR(20) INZ;
  DCL-S Member CHAR(10) INZ;
 //-------------------------------------------------------------------------
 
