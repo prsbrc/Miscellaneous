@@ -1,23 +1,26 @@
+**FREE
+CTL-OPT Main(Main);
 
-    D Main            PR                  EXTPGM( 'DSPUIMWDW' )
+DCL-PR Main EXTPGM('TEST3RG') END-PR;
 
-    P Main            B
+DCL-PROC Main;
 
-    D DspWdwTxt       PR                  EXTPGM( 'QUILNGTX' )
-    D  ParmText                  32765A    CONST OPTIONS( *VARSIZE )
-    D  ParmLenText                  10I 0  CONST
-    D  ParmMsgId                     7A    CONST
-    D  ParmMsgF                     20A    CONST
-    D  ParmError                           LIKEDS( dsAPIError_Template )
+ DCL-PR DspWdwTxt EXTPGM('QUILNGTX');
+   ParmText    CHAR(32765) CONST OPTIONS(*VARSIZE);
+   ParmLenText INT(10)     CONST;
+   ParmMsgId   CHAR(7)     CONST;
+   ParmMsgF    CHAR(20)    CONST;
+   ParmError   CHAR(256);
+ END-PR;
 
-     /INCLUDE *LIBL/QRPGLECPY,ERRORDS
-    D VarText         S          32765A   VARYING
-     *-------------------------------------------------------------------------
+ DCL-S VarText VARCHAR(32765) INZ;
+ DCL-S Error   CHAR(256) INZ;
+ //-------------------------------------------------------------------------
 
-       VarText = 'This is a sample text to show how it works';
+ VarText = 'This is a sample text to show how it works';
 
-       DspWdwTxt(VarText :%Len(VarText) :'' :'' :gdsAPIError);
+ DspWdwTxt(%TrimR(VarText) :%Len(%TrimR(VarText)) :'' :'' :Error);
 
-       Return;
+ Return;
 
-    P                 E
+END-PROC;
