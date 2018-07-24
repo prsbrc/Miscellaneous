@@ -201,7 +201,7 @@ DCL-PROC FetchRecords;
  Reset RecNum;
 
  INDDS.SubfileClear = TRUE;
- INDDS.SubfileDisplayControl = FALSE;
+ INDDS.SubfileDisplayControl = TRUE;
  INDDS.SubfileDisplay = FALSE;
  INDDS.SubfileMore = FALSE;
  Write(E) AUFAN2AC;
