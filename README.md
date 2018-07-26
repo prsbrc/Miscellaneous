@@ -13,3 +13,5 @@ CLCEAP is an example how to calculate a checkdigit with mod10
 CRYPT, CRYPTIFSCL and CRYPTIFSC1: encrypt or decrypt streamfiles via openssh and tdes
 
 AUFAN2RG, AUFAN2DF shows how to make a autorefreshing subfileprogram with DTAQ (example).
+
+ZSSLCLRG is an example for a tls/ssl client application using the socket/gsk-api's from scott klement
