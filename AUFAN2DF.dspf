@@ -10,7 +10,7 @@
 
      **************************************************************************
                 R AUFAN2AC                   OVERLAY INVITE
-                                             CF03 CF05
+                                             CA03(03) CA05(05)
                                              SFLCTL(AUFAN2AS)
                                              SFLPAG(20) SFLSIZ(21)
         20                                   SFLCLR
@@ -22,8 +22,6 @@
                                              RTNCSRLOC(&ACCRCD &ACCFLD &ACCPOS)
                                              SFLCSRRRN(&CURCUR)
 
-                  ACHEAD        40A     1  2 MSGID(RG08726 *LIBL/MSGF)
-                                             COLOR(WHT)
                                         1112 DATE EDTCDE(Y)
                                         1124 TIME
                   CURCUR         5S 0H
