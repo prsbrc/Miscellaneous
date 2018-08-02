@@ -26,7 +26,7 @@
 /INCLUDE QRPGLECPY,H_SPECS
 
 
-DCL-F AUFAN2DF WORKSTN INFDS(WSDS) INDDS(INDDS) MAXDEV(*FILE) SFILE(AUFAN2AS :RECNUM) USROPN;
+DCL-F AUFAN2DF WORKSTN INDDS(WSDS) MAXDEV(*FILE) SFILE(AUFAN2AS :RECNUM) USROPN;
 
 
 // Prototypes
@@ -43,7 +43,6 @@ DCL-PR FetchRecords END-PR;
 
 
 // Global contants
-/INCLUDE QRPGLECPY,CONSTKEYS
 /INCLUDE QRPGLECPY,BOOLIC
 /INCLUDE QRPGLECPY,SQLDEF
 DCL-C FM_A   'A';
@@ -56,9 +55,10 @@ DCL-C COLOR_GREEN x'20';
 
 // Global variables
 /INCLUDE QRPGLECPY,PSDS
-/INCLUDE QRPGLECPY,WSDS
 DCL-S RecNum UNS(10) INZ;
-DCL-DS INDDS QUALIFIED;
+DCL-DS WSDS QUALIFIED;
+  Exit IND POS(3);
+  Refresh IND POS(5);
   SubfileClear IND POS(20);
   SubfileDisplayControl IND POS(21);
   SubfileDisplay IND POS(22);
@@ -119,6 +119,7 @@ DCL-PROC LoopFM_A;
  /INCLUDE QRPGLECPY,QRCVDTAQ
 
  DCL-S QueueData CHAR(80) INZ;
+ DCL-DS FMA LIKEREC(AUFAN2AC :*ALL) INZ;
 //-------------------------------------------------------------------------
 
  ACCRow  = 4;
@@ -141,17 +142,16 @@ DCL-PROC LoopFM_A;
 
    Clear QueueData;
 
-   Read(E) AUFAN2DF;
+   Read(E) AUFAN2AC FMA;
 
    Select;
-     When ( WSDS.KeyPressed = KeyF03 );
-       This.PictureControl  = FM_End;
-     When ( WSDS.KeyPressed = KeyF05 );
+     When ( WSDS.Exit = TRUE );
+       This.PictureControl = FM_End;
+     When ( WSDS.Refresh = TRUE );
        FetchRecords();
    EndSl;
 
  EndDo;
-
 
 END-PROC;
 
