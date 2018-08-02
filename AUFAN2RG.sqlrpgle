@@ -195,10 +195,10 @@ DCL-PROC FetchRecords;
 
  Reset RecNum;
 
- INDDS.SubfileClear = TRUE;
- INDDS.SubfileDisplayControl = TRUE;
- INDDS.SubfileDisplay = FALSE;
- INDDS.SubfileMore = FALSE;
+ WSDS.SubfileClear = TRUE;
+ WSDS.SubfileDisplayControl = TRUE;
+ WSDS.SubfileDisplay = FALSE;
+ WSDS.SubfileMore = FALSE;
  Write(E) AUFAN2AC;
 
  Exec SQL DECLARE C#MAIN CURSOR FOR
@@ -212,10 +212,10 @@ DCL-PROC FetchRecords;
 
  Exec SQL CLOSE C#MAIN;
 
- INDDS.SubfileClear = FALSE;
- INDDS.SubfileDisplayControl = TRUE;
- INDDS.SubfileDisplay = TRUE;
- INDDS.SubfileMore = TRUE;
+ WSDS.SubfileClear = FALSE;
+ WSDS.SubfileDisplayControl = TRUE;
+ WSDS.SubfileDisplay = TRUE;
+ WSDS.SubfileMore = TRUE;
 
  If ( This.RecordsFound > 0 );
 
