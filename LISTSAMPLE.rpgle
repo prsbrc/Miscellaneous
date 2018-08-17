@@ -1,31 +1,30 @@
-     * Program prototype ------------------------------------------------------
-     D Main            PR                  EXTPGM( 'LISTSAMPLE' )
-     D  pdsList                             CONST LIKEDS( gdsList )
+**FREE
+DCL-PR Main EXTPGM('LISTSAMPLE')
+  List CONST LIKEDS(List_Template);
+END-PR;
 
-     * Global constants -------------------------------------------------------
-     D TRUE            C                   *ON
-     D FALSE           C                   *OFF
+DCL-C TRUE *ON;
+DCL-C FALSE *OFF;
 
-     * Global variables -------------------------------------------------------
-     D gdsList         DS                  QUALIFIED
-     D  uCount                        5U 0  INZ
-     D  arCustomers                  10A    DIM( 16 ) INZ
+DCL-DS List_Template QUALIFIED TEMPLATE;
+  Count UNS(5);
+  Customers CHAR(10) DIM(16);
+END-DS;
 
 
-     *#########################################################################
-     *- MAIN - Program
-     *#########################################################################
-    P Main            B
-    D Main            PI
-     D  pdsList                            CONST LIKEDS( gdsList )
+// #########################################################################
+DCL-PROC Main;
+ DCL-PI *N;
+   pList CONST LIKEDS(List_Template);
+ END-PI;
 
-     D i               S              5U 0 INZ
-     *-------------------------------------------------------------------------
+ DCL-S i UNS(5) INZ;
+ //-------------------------------------------------------------------------
 
-      For i=1 To pdsList.uCount;
-      // Do something with pdsList.arCustomers(i)
-      EndFor;
+ For i = 1 To pList.Count;
+   // Do something with pdsList.arCustomers(i)
+ EndFor;
 
-       Return;
+ Return;
 
-    P                 E
+END-PROC;
