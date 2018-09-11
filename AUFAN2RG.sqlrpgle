@@ -128,7 +128,7 @@ DCL-PROC LoopFM_A;
 
  FetchRecords();
 
- DoU ( This.PictureControl = FM_End );
+ DoW ( This.PictureControl = FM_A );
 
    Write AUFAN2AF;
    Write AUFAN2AC;
