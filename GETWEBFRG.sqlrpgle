@@ -57,7 +57,7 @@ DCL-PROC Main;
  URL = %TrimR(pTargetURL);
 
  TargetFile_Name = %TrimR(pTargetIFS);
- TargetFile_NL   = %Len(%TrimR(pTargetIFS));
+ TargetFile_NL   = %Len(%TrimR(TargetFile_Name));
  TargetFile_FO   = SQFOVR;
 
  Exec SQL SELECT SYSTOOLS.HTTPGETBLOB(:URL, '') INTO :TargetFile
