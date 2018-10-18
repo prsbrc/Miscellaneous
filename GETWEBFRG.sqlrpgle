@@ -34,7 +34,8 @@ END-PR;
 
 
 // Global constants -------------------------------------------------------
-/INCLUDE GHP3MOD/QRPGLECPY,CONSTANTS
+DCL-C TRUE *ON;
+DCL-C FALSE *OFF;
 
 
 //#########################################################################
