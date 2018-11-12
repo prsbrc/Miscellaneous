@@ -22,7 +22,7 @@ DCL-PROC Main;
  //-------------------------------------------------------------------------
 
  For i = 1 To pList.Count;
-   // Do something with pdsList.arCustomers(i)
+   // Do something with pList.Customers(i)
  EndFor;
 
  Return;
