@@ -1,5 +1,4 @@
 DCL-S CLOB_File SQLTYPE(CLOB_FILE) CCSID(1208);
-DCL-S MailAdress VARCHAR(128) INZ;
 DCL-S Message VARCHAR(128) INZ;
 //-------------------------------------------------------------------------
 
