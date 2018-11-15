@@ -1,6 +1,6 @@
 **FREE
 
-// 00000000 BRC 29.08.2018 - 15.11.2018
+// 00000000 BRC 15.11.2018
 
 // This is a example to show how an tls client can be on the IBMi
 //   Using IBM's GSK and based on the socketapi from Scott Klement - (c) Scott Klement
@@ -32,16 +32,18 @@ DCL-C CRLF x'0D25';
 
 /INCLUDE QRPGLECPY,ERRNO_H
 
-DCL-S Host CHAR(128) INZ('www.github.com');
-DCL-S GlobalSocket INT(10) INZ;
-DCL-S GSKEnvironment POINTER;
-DCL-S GSKSID POINTER;
+DCL-DS This QUALIFIED;
+  Host CHAR(128) INZ('www.github.com');
+  GlobalSocket INT(10) INZ;
+  GSKEnvironment POINTER;
+  GSKSID POINTER;
+END-DS;
 
 
 //**************************************************************************
 DCL-PROC Main;
 
-DCL-S rc INT(10) INZ;
+DCL-S RC INT(10) INZ;
 DCL-S Data CHAR(1024) INZ;
 DCL-S ConnectTo POINTER;
 DCL-S Address UNS(10) INZ;
@@ -52,6 +54,7 @@ DCL-S GSKLength INT(10) INZ;
 //-------------------------------------------------------------------------
 
  *INLR = TRUE;
+ Reset This;
 
  // Search port
  P_ServEnt = GetServByName('https' :'tcp');
@@ -62,9 +65,9 @@ DCL-S GSKLength INT(10) INZ;
  Port = s_Port;
 
  // Search networkadress for host
- Address = INet_Addr(%Trim(Host));
+ Address = INet_Addr(%Trim(This.Host));
  If ( Address = INADDR_NONE );
-   P_HostEnt = GetHostByName(%Trim(Host));
+   P_HostEnt = GetHostByName(%TrimR(This.Host));
    If ( P_HostEnt = *NULL );
      SendDie('Unable to find your selected host');
      Return;
@@ -73,39 +76,39 @@ DCL-S GSKLength INT(10) INZ;
  EndIf;
 
  // Open GSK environment
- rc = GSK_Environment_Open(GSKEnvironment);
- If ( rc <> GSK_OK );
+ RC = GSK_Environment_Open(This.GSKEnvironment);
+ If ( RC <> GSK_OK );
    Sock_CleanUp();
-   SendDie('gsk_environment_open(): ' + %Str(GSK_StrError(rc)));
+   SendDie('gsk_environment_open(): ' + %Str(GSK_StrError(RC)));
    Return;
  EndIf;
 
  // Set keystore to *SYSTEM
- rc = GSK_Attribute_Set_Buffer(GSKEnvironment :GSK_KEYRING_FILE :'*SYSTEM' :0);
+ GSK_Attribute_Set_Buffer(This.GSKEnvironment :GSK_KEYRING_FILE :'*SYSTEM' :0);
 
  // Tell GSK that we are a client
- rc = GSK_Attribute_Set_eNum(GSKEnvironment :GSK_SESSION_TYPE :GSK_CLIENT_SESSION);
+ GSK_Attribute_Set_eNum(This.GSKEnvironment :GSK_SESSION_TYPE :GSK_CLIENT_SESSION);
 
  // Tell GSK to accept every certificate
- rc = GSK_Attribute_Set_eNum(GSKEnvironment :GSK_SERVER_AUTH_TYPE :GSK_SERVER_AUTH_PASSTHRU);
- rc = GSK_Attribute_Set_eNum(GSKEnvironment :GSK_CLIENT_AUTH_TYPE :GSK_CLIENT_AUTH_PASSTHRU);
+ GSK_Attribute_Set_eNum(This.GSKEnvironment :GSK_SERVER_AUTH_TYPE :GSK_SERVER_AUTH_PASSTHRU);
+ GSK_Attribute_Set_eNum(This.GSKEnvironment :GSK_CLIENT_AUTH_TYPE :GSK_CLIENT_AUTH_PASSTHRU);
 
- // Set tls/ssl-protocols on or off
- rc = GSK_Attribute_Set_eNum(GSKEnvironment :GSK_PROTOCOL_SSLV2 :GSK_PROTOCOL_SSLV2_ON);
- rc = GSK_Attribute_Set_eNum(GSKEnvironment :GSK_PROTOCOL_SSLV3 :GSK_PROTOCOL_SSLV3_ON);
- rc = GSK_Attribute_Set_eNum(GSKEnvironment :GSK_PROTOCOL_TLSV1 :GSK_PROTOCOL_TLSV1_ON );
+ // Set protocols on or off
+ GSK_Attribute_Set_eNum(This.GSKEnvironment :GSK_PROTOCOL_SSLV2 :GSK_PROTOCOL_SSLV2_ON);
+ GSK_Attribute_Set_eNum(This.GSKEnvironment :GSK_PROTOCOL_SSLV3 :GSK_PROTOCOL_SSLV3_ON);
+ GSK_Attribute_Set_eNum(This.GSKEnvironment :GSK_PROTOCOL_TLSV1 :GSK_PROTOCOL_TLSV1_ON );
 
  // Init GSK environment
- rc = GSK_Environment_Init(GSKEnvironment);
- If ( rc <> GSK_OK );
+ RC = GSK_Environment_Init(This.GSKEnvironment);
+ If ( RC <> GSK_OK );
    Sock_CleanUp();
-   SendDie('gsk_environment_init(): ' + %Str(GSK_StrError(rc)));
+   SendDie('gsk_environment_init(): ' + %Str(GSK_StrError(RC)));
    Return;
  EndIf;
 
  // Create socket
- GlobalSocket = Socket(AF_INET :SOCK_STREAM :IPPROTO_IP);
- If ( GlobalSocket < 0 );
+ This.GlobalSocket = Socket(AF_INET :SOCK_STREAM :IPPROTO_IP);
+ If ( This.GlobalSocket < 0 );
    SendDie('socket(): ' + %Str(StrError(ErrNo)));
    Return;
  EndIf;
@@ -121,61 +124,63 @@ DCL-S GSKLength INT(10) INZ;
  Sin_Zero   = *ALLx'00';
 
  // Connect to host
- If ( Connect(GlobalSocket :ConnectTo :AddressLength) < 0 );
+ If ( Connect(This.GlobalSocket :ConnectTo :AddressLength) < 0 );
    Err = ErrNo;
-   Close_Socket(GlobalSocket);
+   Close_Socket(This.GlobalSocket);
    SendDie('connect(): ' + %Str(StrError(Err)));
    Return;
  EndIf;
 
  // Open GSK socket
- rc = GSK_Secure_Soc_Open(GSKEnvironment :GSKSID);
+ RC = GSK_Secure_Soc_Open(This.GSKEnvironment :This.GSKSID);
  If ( rc <> GSK_OK );
    Sock_CleanUp();
-   SendDie('gsk_secure_soc_open(): ' + %Str(GSK_StrError(rc)));
+   SendDie('gsk_secure_soc_open(): ' + %Str(GSK_StrError(RC)));
    Return;
  EndIf;
 
  // Bind GSK to tcp socket
- rc = GSK_Attribute_Set_Numeric_Value(GSKSID :GSK_FD :GlobalSocket);
+ RC = GSK_Attribute_Set_Numeric_Value(This.GSKSID :GSK_FD :This.GlobalSocket);
  If ( rc <> GSK_OK );
    Sock_CleanUp();
-   SendDie('gsk_attribute_set_numeric_value(): ' + %Str(GSK_StrError(rc)));
+   SendDie('gsk_attribute_set_numeric_value(): ' + %Str(GSK_StrError(RC)));
    Return;
  EndIf;
 
  // Set timeout
- rc = GSK_Attribute_Set_Numeric_Value(GSKSID :GSK_HANDSHAKE_TIMEOUT :10);
- If ( rc <> GSK_OK );
+ RC = GSK_Attribute_Set_Numeric_Value(This.GSKSID :GSK_HANDSHAKE_TIMEOUT :10);
+ If ( RC <> GSK_OK );
    Sock_CleanUp();
-   SendDie('gsk_attribute_set_numeric_value(): ' + %Str(GSK_StrError(rc)));
+   SendDie('gsk_attribute_set_numeric_value(): ' + %Str(GSK_StrError(RC)));
    Return;
  EndIf;
 
  // Init GSK socket
- rc = GSK_Secure_Soc_Init(GSKSID);
+ RC = GSK_Secure_Soc_Init(This.GSKSID);
  If ( rc <> GSK_OK );
    Sock_CleanUp();
-   SendDie('gsk_secure_soc_init(): ' + %Str(GSK_StrError(rc)));
+   SendDie('gsk_secure_soc_init(): ' + %Str(GSK_StrError(RC)));
    Return;
  EndIf;
 
  Data = 'GET /index.html HTTP/1.1' + CRLF + 'Host: localhost' + CRLF + CRLF;
  ChangeCCSID(%Len(%TrimR(Data)) :Data :'QTCPASC');
- rc = GSK_Secure_Soc_Write(GSKSID :%Addr(Data) :%Size(Data) :GSKLength);
- If ( rc <> GSK_OK );
+ RC = GSK_Secure_Soc_Write(This.GSKSID :%Addr(Data) :%Size(Data) :GSKLength);
+ If ( RC <> GSK_OK );
    Sock_CleanUp();
-   SendDie('gsk_secure_soc_write(): ' + %Str(GSK_StrError(rc)));
+   SendDie('gsk_secure_soc_write(): ' + %Str(GSK_StrError(RC)));
    Return;
  EndIf;
 
- rc = GSK_Secure_Soc_Read(GSKSID :%Addr(Data) :%Size(Data) :GSKLength);
- If ( rc <> GSK_OK );
+ RC = GSK_Secure_Soc_Read(This.GSKSID :%Addr(Data) :%Size(Data) :GSKLength);
+ If ( RC <> GSK_OK );
    Sock_CleanUp();
-   SendDie('gsk_secure_soc_read(): ' + %Str(GSK_StrError(rc)));
+   SendDie('gsk_secure_soc_read(): ' + %Str(GSK_StrError(RC)));
    Return;
  EndIf;
  ChangeCCSID(%Len(%TrimR(Data)) :Data :'QTCPEBC');
+
+ // To something like follow redirections etc
 
  // Close GSK and sockets
  Sock_CleanUp();
@@ -187,9 +192,9 @@ END-PROC;
 //**************************************************************************
 DCL-PROC Sock_CleanUp;
 
- GSK_Secure_Soc_Close(GSKSID);
- GSK_Environment_Close(GSKEnvironment);
- Close_Socket(GlobalSocket);
+ GSK_Secure_Soc_Close(This.GSKSID);
+ GSK_Environment_Close(This.GSKEnvironment);
+ Close_Socket(This.GlobalSocket);
 
 END-PROC;
 
