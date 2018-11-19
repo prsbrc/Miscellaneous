@@ -2,7 +2,7 @@
 
 // 00000000 BRC 15.11.2018
 
-// This is a example to show how an tls client can be on the IBMi
+// This is a example to show how an tls client can be written on the IBMi
 //   Using IBM's GSK and based on the socketapi from Scott Klement - (c) Scott Klement
 
 
@@ -163,6 +163,7 @@ DCL-S GSKLength INT(10) INZ;
    Return;
  EndIf;
 
+ // Send request
  Data = 'GET /index.html HTTP/1.1' + CRLF + 'Host: localhost' + CRLF + CRLF;
  ChangeCCSID(%Len(%TrimR(Data)) :Data :'QTCPASC');
  RC = GSK_Secure_Soc_Write(This.GSKSID :%Addr(Data) :%Size(Data) :GSKLength);
@@ -172,6 +173,7 @@ DCL-S GSKLength INT(10) INZ;
    Return;
  EndIf;
 
+ // Get result
  RC = GSK_Secure_Soc_Read(This.GSKSID :%Addr(Data) :%Size(Data) :GSKLength);
  If ( RC <> GSK_OK );
    Sock_CleanUp();
@@ -180,7 +182,7 @@ DCL-S GSKLength INT(10) INZ;
  EndIf;
  ChangeCCSID(%Len(%TrimR(Data)) :Data :'QTCPEBC');
 
- // To something like follow redirections etc
+ // Do something with the result (like follow redirections etc)
 
  // Close GSK and sockets
  Sock_CleanUp();
@@ -224,16 +226,16 @@ DCL-PROC SendDie;
    MsgData CHAR(512);
  END-DS;
 
- DCL-S MsgLength INT(10) INZ;
+ DCL-S MessageLength INT(10) INZ;
  DCL-S MessageKey CHAR(4) INZ;
 //-------------------------------------------------------------------------
 
- MsgLength = %Len(%TrimR(pMessage));
- If ( MsgLength < 1 );
+ MessageLength = %Len(%TrimR(pMessage));
+ If ( MessageLength < 1 );
    Return;
  EndIf;
 
- SndPgmMsg('CPF9897' :'QCPFMSG   *LIBL' :pMessage: MsgLength :'*ESCAPE'
+ SndPgmMsg('CPF9897' :'QCPFMSG   *LIBL' :pMessage: MessageLength :'*ESCAPE'
            :'*PGMBDY' :1 :MessageKey :ErrorDS);
 
 END-PROC;
