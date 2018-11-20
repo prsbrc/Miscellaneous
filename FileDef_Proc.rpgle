@@ -3,13 +3,15 @@ DCL-PROC Procedure;
 
  DCL-F FILENAME USROPN USAGE(*INPUT) EXTFILE(File) EXTDESC(LIB/FILE) EXTMBR(Member);
 
+ // Define all fields from table(record)
  DCL-DS RecordDS LIKEREC(FILEREC :*ALL) INZ;
+
  DCL-S File   CHAR(20) INZ;
  DCL-S Member CHAR(10) INZ;
 //-------------------------------------------------------------------------
 
  File   = 'LIB/FILE';
- Member = 'Member1';
+ Member = 'MEMBER1';
  
  If Not %Open(FileName);
    Open FileName;
