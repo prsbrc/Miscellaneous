@@ -18,3 +18,5 @@ ZTLSCLRG is an example for a tls/ssl client application using the socket/gsk-api
 
 GETWEBF/GETWEBFRG uses the UDF HTTPGETBLOB to download a file from the web onto your ifs 
    (example: GETWEBF URL('http://www.liferadio.tirol/webcam/Studio1.jpg') PATH('/tmp/Studio.jpg') )
+
+HTML_CLOB imports a html-template in a clob-var, replace the vars and write it via clob_file to a new one
