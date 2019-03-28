@@ -10,7 +10,8 @@ DSPUIMWDW shows how to use API QUILNGTX for a easy window.
 
 CLCEAP is an example how to calculate a checkdigit with mod10
 
-CRYPT, CRYPTIFSCL and CRYPTIFSC1: encrypt or decrypt streamfiles via openssh and tdes
+CRYPT, CRYPTIFSCL: encrypt or decrypt streamfiles via openssl and tdes
+                   encode and decode streamfiles to/from base64 via openssl
 
 AUFAN2RG, AUFAN2DF shows how to make a autorefreshing subfileprogram with DTAQ (example).
 
@@ -18,6 +19,7 @@ ZTLSCLRG is an example for a tls/ssl client application using the socket/gsk-api
 
 GETWEBF/GETWEBFRG uses the UDF HTTPGETBLOB to download a file from the web onto your ifs 
    (example: GETWEBF URL('http://www.liferadio.tirol/webcam/Studio1.jpg') PATH('/tmp/Studio.jpg') )
+   CAUTION! The UDF HTTPGETBLOB starts a JVM for each calling job!
 
 HTML_CLOB imports a html-template in a clob-var, replace the vars and write it via clob_file to a new one
 
