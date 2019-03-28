@@ -1,57 +1,104 @@
-PGM (&MODE &FROM &TO &KEY &DELETE)
+PGM (&MODE &FROM &TO &PASSWORD &DELETE)
 
-  DCL &MODE    TYPE(*CHAR) LEN(4)
-  DCL &FROM    TYPE(*CHAR) LEN(128)
-  DCL &TO      TYPE(*CHAR) LEN(128)
-  DCL &KEY     TYPE(*CHAR) LEN(32)
-  DCL &DELETE  TYPE(*CHAR) LEN(4)
-  DCL &CMD     TYPE(*CHAR) LEN(512)
-  DCL &SUCCESS TYPE(*CHAR) LEN(1) VALUE('1')
+  DCL &MODE TYPE(*CHAR) LEN(4)
+  DCL &FROM TYPE(*CHAR) LEN(128)
+  DCL &TO TYPE(*CHAR) LEN(128)
+  DCL &PASSWORD TYPE(*CHAR) LEN(32)
+  DCL &DELETE TYPE(*LGL)
+  DCL &CMD TYPE(*CHAR) LEN(512)
+  DCL &SUCCESS TYPE(*LGL) VALUE('1')
 
-  DCLPRCOPT  USRPRF(*USER) AUT(*EXCLUDE) DFTACTGRP(*NO) ACTGRP(*NEW)
+  DCLPRCOPT LOG(*NO) ALWRTVSRC(*NO) USRPRF(*USER) AUT(*EXCLUDE) +
+             STGMDL(*TERASPACE) DFTACTGRP(*NO) ACTGRP(*NEW)
 
   RMVLNK OBJLNK(&TO)
   MONMSG MSGID(CPF0000)
 
-  IF (&KEY = ' ') THEN(DO)
-    SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) MSGDTA('No key available') TOPGMQ(*PRV)
+  IF (&PASSWORD = ' ' *AND &MODE *NE '*B64') THEN(DO)
+    SNDPGMMSG MSGID(CPF9897) MSGF(QCPFMSG) +
+              MSGDTA('No password available') MSGTYPE(*ESCAPE)
     CHGVAR &SUCCESS '0'
   ENDDO
 
-  If (&SUCCESS = '1' ) THEN(DO)
-    ADDENVVAR  ENVVAR(QIBM_QSH_CMD_OUTPUT) VALUE('NONE') REPLACE(*YES)
-    ADDENVVAR  ENVVAR(QIBM_QSH_CMD_ESCAPE_MSG) VALUE(Y) REPLACE(*YES)
+  IF (&SUCCESS = '1' ) THEN(DO)
 
+    ADDENVVAR ENVVAR(QIBM_QSH_CMD_OUTPUT) VALUE('NONE') REPLACE(*YES)
+    ADDENVVAR ENVVAR(QIBM_QSH_CMD_ESCAPE_MSG) VALUE(Y) REPLACE(*YES)
 
-    IF (&MODE = '*ENC') THEN(DO)
-      CHGVAR &CMD VALUE('openssl des3 -salt -in ' +
-                         *CAT &FROM *TCAT ' -out ' *CAT &TO *TCAT +
-                         ' -k ' *CAT &KEY)
-      STRQSH CMD(&CMD)
-      MONMSG MSGID(CPF0000) EXEC(DO)
-        SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) MSGDTA('Error while encryption') TOPGMQ(*PRV)
-        CHGVAR &SUCCESS '0'
+    SELECT
+      WHEN (&MODE = '*ENC') THEN(DO)
+        CALLSUBR ENCRYPT
       ENDDO
-      IF (&DELETE = '*YES' *AND &SUCCESS = '1' ) THEN(DO)
-        RMVLNK OBJLNK(&FROM)
-        MONMSG MSGID(CPF0000)
-      ENDDO
-    ENDDO
 
-    IF (&MODE *EQ '*DEC') THEN(DO)
-      CHGVAR &CMD VALUE('openssl des3 -d -salt -in ' +
-                        *CAT &FROM *TCAT ' -out ' *CAT &TO *TCAT +
-                        ' -k ' *CAT &KEY)
-      STRQSH CMD(&CMD)
-      MONMSG MSGID(CPF0000) EXEC(DO)
-        SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) MSGDTA('Error while decryption') TOPGMQ(*PRV)
-        CHGVAR &SUCCESS '0'
+      WHEN (&MODE *EQ '*DEC') THEN(DO)
+        CALLSUBR DECRYPT
       ENDDO
-      IF (&DELETE = '*YES' *AND &SUCCESS = '1' ) THEN(DO)
-        RMVLNK OBJLNK(&FROM)
-        MONMSG MSGID(CPF0000)
+
+      WHEN (&MODE *EQ '*B64') THEN(DO)
+        CALLSUBR BASE64
       ENDDO
-    ENDDO
+
+      OTHERWISE (DO)
+        CALLSUBR ENCRYPT
+      ENDDO
+
+    ENDSELECT
+
   ENDDO
+
+  IF (&DELETE = '1' *AND &SUCCESS = '1' ) THEN(DO)
+    CALLSUBR DELETE
+  ENDDO
+
+  RETURN
+
+/* ------------------ */
+  SUBR ENCRYPT
+
+    CHGVAR &CMD VALUE('openssl des3 -salt -in ' *CAT &FROM *TCAT +
+                      ' -out ' *CAT &TO *TCAT ' -k ' *CAT &PASSWORD)
+    STRQSH CMD(&CMD)
+    MONMSG MSGID(CPF0000) EXEC(DO)
+      SNDPGMMSG MSGID(CPF9897) MSGF(QCPFMSG) +
+                MSGDTA('Error while encryption') MSGTYPE(*ESCAPE)
+      CHGVAR &SUCCESS '0'
+    ENDDO
+
+  ENDSUBR
+
+/* ------------------ */
+  SUBR DECRYPT
+
+    CHGVAR &CMD VALUE('openssl des3 -d -salt -in ' *CAT &FROM *TCAT +
+                      ' -out ' *CAT &TO *TCAT ' -k ' *CAT &PASSWORD)
+    STRQSH CMD(&CMD)
+    MONMSG MSGID(CPF0000) EXEC(DO)
+      SNDPGMMSG MSGID(CPF9897) MSGF(QCPFMSG) +
+                MSGDTA('Error while decryption') MSGTYPE(*ESCAPE)
+      CHGVAR &SUCCESS '0'
+    ENDDO
+
+  ENDSUBR
+
+/* ------------------ */
+  SUBR BASE64
+
+    CHGVAR &CMD  VALUE('openssl base64 -in ' *CAT &FROM *TCAT ' -out ' *CAT &TO)
+    STRQSH CMD(&CMD)
+    MONMSG MSGID(CPF0000) EXEC(DO)
+      SNDPGMMSG MSGID(CPF9897) MSGF(QCPFMSG) +
+                MSGDTA('Error occured while encoding') MSGTYPE(*ESCAPE)
+      CHGVAR &SUCCESS '0'
+    ENDDO
+
+  ENDSUBR
+
+/* ------------------ */
+  SUBR DELETE
+
+    RMVLNK OBJLNK(&FROM)
+    MONMSG MSGID(CPF0000)
+
+  ENDSUBR
 
 ENDPGM
