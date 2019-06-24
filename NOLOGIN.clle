@@ -1,0 +1,13 @@
+             PGM
+
+             DCLPRCOPT  USRPRF(*OWNER) AUT(*USE) STGMDL(*SNGLVL) +
+                          ACTGRP(*NEW)
+
+             ADDLIBLE   LIB(GORKON1)
+             MONMSG     MSGID(CPF0000)
+
+             OVRDSPF    FILE(TSTPGM1DF) DEV(AZ_0815) OVRSCOPE(*JOB)
+
+             CALL       PGM(GORKON1/TSTPGM1RG)
+
+             ENDPGM
