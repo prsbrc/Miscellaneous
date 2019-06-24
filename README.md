@@ -24,3 +24,5 @@ GETWEBF/GETWEBFRG uses the UDF HTTPGETBLOB to download a file from the web onto 
 HTML_CLOB imports a html-template in a clob-var, replace the vars and write it via clob_file to a new one
 
 TESTXLSX is a sample to show how to use the libxlsx to create directly excel-sheets from rpg
+
+NOLOGIN shows how to override an interactive job to an prestarted batch-job. In this case no login is neccessary to run the program called in the CL
