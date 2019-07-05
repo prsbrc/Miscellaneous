@@ -50,6 +50,8 @@ DCL-PROC Main;
   DCL-S ItemNumber CHAR(10) INZ;
   DCL-S ItemDescription CHAR(30) INZ;
   DCL-S StockQuantity PACKED(9 :2) INZ;
+
+  DCL-S Color CHAR(1);
 //*----
 
   CustomerNumber = pParameters.InParameter(1);
@@ -81,7 +83,14 @@ DCL-PROC Main;
     If ( SQLCode = 0 );
       pParameters.OutParameter(09) = 'Artikelnummer: ' + x'22' + %TrimR(ItemNumber) + x'20';
       pParameters.OutParameter(10) = 'Bezeichnung..: ' + x'22' + %TrimR(ItemDescription) + x'20';
-      pParameters.OutParameter(11) = 'Bestand......: ' + x'22' + %Char(StockQuantity) + x'20';
+      If ( StockQuantity > 0 );
+        Color = x'22';
+      ElseIf ( StockQuantity = 0 );
+        Color = x'32';
+      ElseIf ( StockQuantity < 0 );
+        Color = x'2B';
+      EndIf;
+      pParameters.OutParameter(11) = 'Bestand......: ' + Color + %Char(StockQuantity) + x'20';
     EndIf;
   EndIf;
 

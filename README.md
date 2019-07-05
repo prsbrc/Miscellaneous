@@ -29,5 +29,5 @@ NOLOGIN shows how to override an interactive job to an prestarted batch-job. In 
 
 "Asyncronous interactive job example" contains an example to call an interactive job without login and control it via dataqueue.
 For this example i have created an own subsystem / signon / user with specific ws entries. 
-The user from the signon have to set the proto2rg as startprogram. This is only an example.
-The dataqueues must be defined variable on a live system. The logic to find the correct dataqueue is missing.
+The user from the signon have to set the proto2rg as startprogram. 
+The dataqueues must be defined variable on a live system. The logic to find the correct dataqueue is currently missing.
