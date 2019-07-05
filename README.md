@@ -26,3 +26,5 @@ HTML_CLOB imports a html-template in a clob-var, replace the vars and write it v
 TESTXLSX is a sample to show how to use the libxlsx to create directly excel-sheets from rpg
 
 NOLOGIN shows how to override an interactive job to an prestarted batch-job. In this case no login is neccessary to run the program called in the CL
+
+"Asyncronous interactive job example" contains an example to call an interactive job without login and control it via dataqueue.

@@ -1,0 +1,13 @@
+                                            DSPSIZ(27 132 *DS4) PRINT
+
+                R PROTO1A0
+                                            CSRLOC(A01CLIN A01CPOS)
+                                            RTNCSRLOC(*MOUSE &A01CLIN &A01CPOS)
+                                            OVERLAY
+                                            CF03 CA12
+                  A01CLIN        3  0H
+                  A01CPOS        3  0H
+                                        2  2'Kunde..:'
+                  A01KNR        10A  B  2 11COLOR(WHT)
+                                        4  2'Artikel:'
+                  A01ANR        10A  B  4 11COLOR(WHT)

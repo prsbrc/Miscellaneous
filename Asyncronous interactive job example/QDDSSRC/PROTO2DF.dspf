@@ -1,0 +1,36 @@
+                                            DSPSIZ(27 132 *DS4) PRINT
+
+                R PROTO2A0
+                                            CSRLOC(A02CLIN A02CPOS)
+                                            RTNCSRLOC(*MOUSE &A02CLIN &A02CPOS)
+                                            OVERLAY INVITE
+                                            CF03 CA12
+                  A02CLIN        3  0H
+                  A02CPOS        3  0H
+                  A02LINE01    130A  O 01  2
+                  A02LINE02    130A  O 02  2
+                  A02LINE03    130A  O 03  2
+                  A02LINE04    130A  O 04  2
+                  A02LINE05    130A  O 05  2
+                  A02LINE06    130A  O 06  2
+                  A02LINE07    130A  O 07  2
+                  A02LINE08    130A  O 08  2
+                  A02LINE09    130A  O 09  2
+                  A02LINE10    130A  O 10  2
+                  A02LINE11    130A  O 11  2
+                  A02LINE12    130A  O 12  2
+                  A02LINE13    130A  O 13  2
+                  A02LINE14    130A  O 14  2
+                  A02LINE15    130A  O 15  2
+                  A02LINE16    130A  O 16  2
+                  A02LINE17    130A  O 17  2
+                  A02LINE18    130A  O 18  2
+                  A02LINE19    130A  O 19  2
+                  A02LINE20    130A  O 20  2
+                  A02LINE21    130A  O 21  2
+                  A02LINE22    130A  O 22  2
+                  A02LINE23    130A  O 23  2
+                  A02LINE24    130A  O 24  2
+                  A02LINE25    130A  O 25  2
+                  A02LINE26    130A  O 26  2
+                  A02LINE27    130A  O 27  2

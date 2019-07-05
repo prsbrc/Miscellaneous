@@ -1,0 +1,7 @@
+**FREE
+DCL-PR SendToDataQueue EXTPGM('QSNDDTAQ');
+  QName CHAR(10) CONST;
+  QLibrary CHAR(10) CONST;
+  QLength PACKED(5 :0) CONST;
+  QData CHAR(80) CONST;
+END-PR;
