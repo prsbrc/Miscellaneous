@@ -1,0 +1,89 @@
+
+                                             DSPSIZ(27 132 *DS4) PRINT INDARA
+
+
+     **************************************************************************
+                R EMLAN0AS                   SFL
+
+                  ASLINE       130A  O 04 02
+
+                  ASRECN         6  0H
+
+
+     **************************************************************************
+                R EMLAN0AC                   OVERLAY INVITE
+                                             CA03(03) CA04(04)
+                                             CA05(05) CA09(09)
+                                             SFLCTL(EMLAN0AS)
+                                             SFLPAG(20) SFLSIZ(21)
+        20                                   SFLCLR
+        21                                   SFLDSPCTL
+        22                                   SFLDSP
+        23                                   SFLEND(*MORE)
+                                             CSRLOC(ACCROW ACCCOL)
+                                             RTNCSRLOC(*MOUSE  &ACCROW &ACCCOL)
+                                             RTNCSRLOC(&ACCRCD &ACCFLD &ACCPOS)
+                                             SFLCSRRRN(&CURCUR)
+
+     * - Header
+                  ACHEAD        40A     1  2 MSGID(RG08746 *LIBL/CCMSGF)
+                                             COLOR(WHT)
+                                        1100 USER
+                                        1112 DATE EDTCDE(Y)
+                                        1124 TIME
+                  CURCUR         5S 0H
+                  ACCROW         3S 0H
+                  ACCCOL         3S 0H
+                  ACCRCD        10A  H
+                  ACCFLD        10A  H
+                  ACCPOS         4S 0H
+     * - I/O
+                  ACREFR         2S 0B  2130COLOR(TRQ) ALIAS(AC_REFRESH)
+                                            RANGE(1 60)
+     * - O
+                  ACMAIL        60A  O  2  2ALIAS(AC_MAIL)
+                                            COLOR(YLW)
+                  ACDEVICE      10A  O  2100
+                  ACHEAD0       16A  O  2113MSGID(RG08727 *LIBL/CCMSGF)
+                  ACLIN00      130A  O  3  2DSPATR(UL) COLOR(BLU)
+                                            MSGID(RG08747 *LIBL/CCMSGF)
+
+
+
+     **************************************************************************
+                R EMLAN0AF                  OVERLAY
+                  AFLIN01      130A  O 25 02DSPATR(UL) COLOR(BLU)
+                  AFLIN02      130A  O 26 02MSGID(RG08748 *LIBL/CCMSGF)
+                                            COLOR(BLU)
+
+
+     **************************************************************************
+                R EMLAN0W0                  OVERLAY
+                                            WINDOW(10 20 08 46 *NOMSGLIN)
+                                            WDWBORDER((*CHAR '        ') +
+                                                      (*DSPATR RI)       +
+                                                      (*COLOR BLU))
+                                            CA03(03) CA12(12)
+                                            CSRLOC(W0CROW W0CCOL)
+                                            RTNCSRLOC(*MOUSE  &W0CROW &W0CCOL)
+                                            RTNCSRLOC(&W0CRCD &W0CFLD &W0CPOS)
+
+                  W0CROW         3S 0H
+                  W0CCOL         3S 0H
+                  W0CRCD        10A  H
+                  W0CFLD        10A  H
+                  W0CPOS         4S 0H
+
+                                        1  2'Anmeldung an Mailserver'
+                                        3  2'Host....:'
+                                        4  2'User....:'
+                                        5  2'Password:'
+                                        7  2'F3=Quit'
+                                            COLOR(BLU)
+                  W0HOST        16A  B  3 12COLOR(TRQ) ALIAS(W0_HOST)
+                                            CHECK(LC)
+                  W0USER        32A  B  4 12COLOR(TRQ) ALIAS(W0_BENUTZER)
+                                            CHECK(LC)
+                  W0PASS        32A  B  5 12COLOR(TRQ) ALIAS(W0_KENNWORT)
+                                            CHECK(LC) DSPATR(ND)
+
