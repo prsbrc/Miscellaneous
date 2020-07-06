@@ -30,15 +30,33 @@ CTL-OPT MAIN(Main) ALWNULL(*USRCTL) AUT(*EXCLUDE) DATFMT(*ISO-) TIMFMT(*ISO.) DE
 
 
 // Program prototype
-DCL-PR Main EXTPGM('CHGOBJDRG') END-PR;
+DCL-PR Main EXTPGM('CHGOBJARG');
+ ObjectLibrary LIKEDS(QualifiedObjectName_T) CONST;
+ ObjectType CHAR(10) CONST;
+ SystemName CHAR(8) CONST;
+ CreatedBy CHAR(10) CONST;
+ CreatedOnDate CHAR(13) CONST;
+END-PR;
+
+DCL-DS QualifiedObjectName_T QUALIFIED TEMPLATE;
+ Name CHAR(10);
+ Library CHAR(10);
+END-DS;
 
 
 //#########################################################################
 //- MAIN-Procedure
 //#########################################################################
 DCL-PROC Main;
+ DCL-PI *N;
+  pObjectLibrary LIKEDS(QualifiedObjectName_T) CONST;
+  pObjectType CHAR(10) CONST;
+  pSystemName CHAR(8) CONST;
+  pCreatedBy CHAR(10) CONST;
+  pCreatedOnDate CHAR(13) CONST;
+ END-PI;
 
- DCL-PR changeObjectDescription EXTPGM('QLICOBJD');
+ DCL-PR changeObjectAttribute EXTPGM('QLICOBJD');
   ReturnedLibrary CHAR(10);
   ObjectLibrary CHAR(20) CONST;
   ObjectType CHAR(10) CONST;
@@ -48,8 +66,6 @@ DCL-PROC Main;
 
  DCL-S Lib CHAR(10) INZ;
  DCL-S Error CHAR(128) INZ;
- DCL-C ObjLib 'T         BRUNNER';
- DCL-C ObjType '*PGM';
  DCL-C NewStamp '1501231010101';
 
  DCL-DS DataDS QUALIFIED INZ;
@@ -66,19 +82,25 @@ DCL-PROC Main;
  DataDS.Length = %Len(DataDS.Data);
 
  // Change systemname
- DataDS.Key = 18;
- DataDS.Data = 'brunner';
- changeObjectDescription(Lib :ObjLib :ObjType :DataDS :Error);
+ If ( pSystemName <> '*SAME' );
+   DataDS.Key = 18;
+   DataDS.Data = pSystemName;
+   changeObjectAttribute(Lib :pObjectLibrary.Name + pObjectLibrary.Library :pObjectType :DataDS :Error);
+ EndIf;
 
  // Change userprofile (created by)
- DataDS.Key = 19;
- DataDS.Data = 'brc';
- changeObjectDescription(Lib :ObjLib :ObjType :DataDS :Error);
+ If ( pCreatedBy <> '*SAME' );
+   DataDS.Key = 19;
+   DataDS.Data = pCreatedBy;
+   changeObjectAttribute(Lib :pObjectLibrary.Name + pObjectLibrary.Library :pObjectType :DataDS :Error);
+ EndIf;
 
  // Change date/time (created on)
- DataDS.Key = 20;
- DataDS.Data = NewStamp;
- changeObjectDescription(Lib :ObjLib :ObjType :DataDS :Error);
+ If ( pCreatedOnDate <> '*SAME' );
+   DataDS.Key = 20;
+   DataDS.Data = pCreatedOnDate;
+   changeObjectAttribute(Lib :pObjectLibrary.Name + pObjectLibrary.Library :pObjectType :DataDS :Error);
+ EndIf;
 
  Return;
 
