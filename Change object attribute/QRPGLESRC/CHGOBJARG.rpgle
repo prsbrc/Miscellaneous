@@ -36,6 +36,7 @@ DCL-PR Main EXTPGM('CHGOBJARG');
  SystemName CHAR(8) CONST;
  CreatedBy CHAR(10) CONST;
  CreatedOnDate CHAR(13) CONST;
+ NewOwner CHAR(10) CONST;
 END-PR;
 
 DCL-DS QualifiedObjectName_T QUALIFIED TEMPLATE;
@@ -49,11 +50,12 @@ END-DS;
 //#########################################################################
 DCL-PROC Main;
  DCL-PI *N;
-  pObjectLibrary LIKEDS(QualifiedObjectName_T) CONST;
+  pObject LIKEDS(QualifiedObjectName_T) CONST;
   pObjectType CHAR(10) CONST;
   pSystemName CHAR(8) CONST;
   pCreatedBy CHAR(10) CONST;
   pCreatedOnDate CHAR(13) CONST;
+  pNewOwner CHAR(10) CONST;
  END-PI;
 
  DCL-PR changeObjectAttribute EXTPGM('QLICOBJD');
@@ -62,6 +64,10 @@ DCL-PROC Main;
   ObjectType CHAR(10) CONST;
   Data LIKEDS(DataDS) CONST;
   Error CHAR(128) OPTIONS(*VARSIZE);
+ END-PR;
+
+ DCL-PR system INT(10) EXTPROC('system');
+  *N POINTER VALUE OPTIONS(*STRING);
  END-PR;
 
  DCL-S Lib CHAR(10) INZ;
@@ -85,21 +91,27 @@ DCL-PROC Main;
  If ( pSystemName <> '*SAME' );
    DataDS.Key = 18;
    DataDS.Data = pSystemName;
-   changeObjectAttribute(Lib :pObjectLibrary.Name + pObjectLibrary.Library :pObjectType :DataDS :Error);
+   changeObjectAttribute(Lib :pObject.Name + pObject.Library :pObjectType :DataDS :Error);
  EndIf;
 
  // Change userprofile (created by)
  If ( pCreatedBy <> '*SAME' );
    DataDS.Key = 19;
    DataDS.Data = pCreatedBy;
-   changeObjectAttribute(Lib :pObjectLibrary.Name + pObjectLibrary.Library :pObjectType :DataDS :Error);
+   changeObjectAttribute(Lib :pObject.Name + pObject.Library :pObjectType :DataDS :Error);
  EndIf;
 
  // Change date/time (created on)
  If ( pCreatedOnDate <> '*SAME' );
    DataDS.Key = 20;
    DataDS.Data = pCreatedOnDate;
-   changeObjectAttribute(Lib :pObjectLibrary.Name + pObjectLibrary.Library :pObjectType :DataDS :Error);
+   changeObjectAttribute(Lib :pObject.Name + pObject.Library :pObjectType :DataDS :Error);
+ EndIf;
+
+ If ( pNewOwner <> '*SAME' );
+   system('CHGOBJOWN OBJ(' + %TrimR(pObject.Library) + '/' + %TrimR(pObject.Name) +
+          ') OBJTYPE(' + %TrimR(pObjectType) + ') ASPDEV(*) NEWOWN(' + %TrimR(pNewOwner) +
+          ') CUROWNAUT(*REVOKE)');
  EndIf;
 
  Return;

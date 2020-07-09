@@ -35,6 +35,10 @@
                           CASE(*MIXED) CHOICE('1YYMMTThhmmss') +
                           PROMPT('New stamp')
 
+             PARM       KWD(NEWOWN) TYPE(*NAME) LEN(10) DFT(*SAME) +
+                          SPCVAL((*SAME *SAME)) PROMPT('New +
+                          objectowner')
+
  OBJLIB:     QUAL       TYPE(*SNAME)
              QUAL       TYPE(*SNAME) DFT(*LIBL) SPCVAL((*LIBL +
                           *LIBL)) PROMPT('Library')
