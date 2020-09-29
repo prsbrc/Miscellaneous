@@ -1,0 +1,26 @@
+             PGM
+
+             DCL        VAR(&EOF) TYPE(*LGL) VALUE('0')
+             DCLF       FILE(BRUNNER/DATE_TIME) OPNID(A)
+
+             DOWHILE    COND(&EOF = '0')
+
+             RCVF       OPNID(A)
+             MONMSG     MSGID(CPF0000) EXEC(DO)
+             CHGVAR     VAR(&EOF) VALUE('1')
+             LEAVE
+             ENDDO
+
+             SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) +
+                          MSGDTA(&A_CHAR_DATE) TOPGMQ(*EXT) +
+                          MSGTYPE(*DIAG)
+             SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) +
+                          MSGDTA(&A_CHAR_TIME) TOPGMQ(*EXT) +
+                          MSGTYPE(*DIAG)
+             SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) +
+                          MSGDTA(&A_DAY_NAME) TOPGMQ(*EXT) +
+                          MSGTYPE(*DIAG)
+
+             ENDDO
+
+             ENDPGM
