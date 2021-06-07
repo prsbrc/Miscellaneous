@@ -1,3 +1,14 @@
+COPY_SPOOLEDFILE_TO_PDF is a SQL-UDF to copy spooled files to PDF-files within the IFS.
+It return 0 for success and -1 for failure
+Example:
+```
+VALUES(BRUNNER.COPY_SPOOLEDFILE_TO_PDF(         
+        'QPRTLIBL',
+		'818377/DV0109/SESSIONA', 
+		1,
+        '/tmp/QPRTLIBL_test.pdf'))
+```
+
 LISTSAMPLE shows how to use commands with parms (list-parms).
 
 SETFREE shows how to manipulate the source-code to add colors (if, endif etc).
