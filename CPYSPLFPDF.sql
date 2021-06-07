@@ -1,3 +1,19 @@
+/*
+COPYRIGHT (c)2021 Christian Brunner
+
+Copy spooled file to ifs as pdf-file.
+Using the OS - CPYSPLF-Command.
+
+Incoming Parameters:
+ - Spoolfile name
+ - Job name
+ - Spoolfile number
+ - Target path to save the pdf-file
+ 
+Returns 0 by success and -1 due failure
+*/
+
+
 CREATE OR REPLACE FUNCTION BRUNNER.COPY_SPOOLEDFILE_TO_PDF
 ( 
     PARM_SPOOL_NAME VARCHAR(10),
