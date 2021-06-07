@@ -28,7 +28,7 @@ VALUES(BRUNNER.COPY_SPOOLEDFILE_TO_PDF(
 
 ```ZTLSCLRG``` is a example for a tls/ssl client application using the socket/gsk-api's from scott klement
 
-GETWEBF/GETWEBFRG uses the UDF HTTPGETBLOB to download a file from the web onto your ifs 
+```GETWEBF/GETWEBFRG``` uses the UDF HTTPGETBLOB to download a file from the web onto your ifs 
    (example: ```GETWEBF URL('http://www.liferadio.tirol/webcam/Studio1.jpg') PATH('/tmp/Studio.jpg')``` )
    CAUTION! The UDF HTTPGETBLOB starts a JVM for each calling job!
 
@@ -38,7 +38,7 @@ GETWEBF/GETWEBFRG uses the UDF HTTPGETBLOB to download a file from the web onto 
 
 ```NOLOGIN``` shows how to override an interactive job to an prestarted batch-job. In this case no login is neccessary to run the program called in the CL
 
-"Asyncronous interactive job example" contains an example to call an interactive job without login and control it via dataqueue.
+```"Asyncronous interactive job example"``` contains an example to call an interactive job without login and control it via dataqueue.
 For this example i have created an own subsystem / signon / user with specific ws entries. 
 The user from the signon have to set the proto2rg as startprogram. 
 The dataqueues must be defined variable on a live system. The logic to find the correct dataqueue is currently missing.
