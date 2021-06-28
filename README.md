@@ -4,9 +4,18 @@ Example:
 ```
 VALUES(BRUNNER.COPY_SPOOLEDFILE_TO_PDF(         
        'QPRTLIBL',
-       '818377/DV0109/SESSIONA', 
+       '818377/USER/SESSIONA', 
        1,
        '/tmp/QPRTLIBL_test.pdf'))
+```
+
+```EXECUTECOMMAND``` executes system commands.
+
+Example:
+```
+SELECT executeCommand ('SNDMSG MSG(''' CONCAT TRIM(text_description) CONCAT ''') TOUSR(USER)')                                
+ FROM QSYS2.USER_INFO
+WHERE text_description LIKE '%Brunner%' LIMIT 10;
 ```
 
 ```LISTSAMPLE``` shows how to use commands with parms (list-parms).
