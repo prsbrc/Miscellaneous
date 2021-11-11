@@ -25,7 +25,7 @@
 CTL-OPT ALWNULL(*USRCTL) DATFMT(*ISO-) TIMFMT(*ISO.) DEBUG(*YES) NOMAIN;
 
 
-//---
+//#########################################################################
 DCL-PROC rtvdspvrtdevd EXPORT;
  DCL-PI *N;
   DeviceNameIn VARCHAR(10) CONST;
@@ -52,6 +52,7 @@ DCL-PROC rtvdspvrtdevd EXPORT;
  DCL-C PARM_NOTNULL 0;
 
  DCL-S InternalDeviceName CHAR(10) INZ;
+ //------------------------------------------------------------------------
 
  Exec SQL SET OPTION DATFMT = *ISO, DATSEP = '-', TIMFMT = *ISO, TIMSEP = '.',
                      CLOSQLCSR = *ENDACTGRP, USRPRF = *OWNER, DYNUSRPRF = *OWNER,
@@ -80,11 +81,12 @@ DCL-PROC rtvdspvrtdevd EXPORT;
 
 END-PROC;
 
-//---
+//#########################################################################
 DCL-PROC openReader;
  DCL-PI *N;
   DeviceName VARCHAR(10) CONST;
  END-PI;
+ //------------------------------------------------------------------------
 
  Exec SQL DECLARE display_device_description_reader CURSOR FOR
            SELECT RTRIM(devd.objname),
@@ -101,7 +103,7 @@ DCL-PROC openReader;
 
 END-PROC;
 
-//---
+//#########################################################################
 DCL-PROC fetchNextFromReader;
  DCL-PI *N;
   DeviceName VARCHAR(10);
@@ -126,31 +128,70 @@ DCL-PROC fetchNextFromReader;
  END-DS;
 
  DCL-S ErrorValue CHAR(512) INZ;
+ //------------------------------------------------------------------------
 
  Exec SQL FETCH NEXT FROM display_device_description_reader
            INTO :DeviceName, :DeviceCategory, :TextDescription;
+
  If ( SQLCode = 100 );
+   // Set state for eof
    State = '02000';
+
  ElseIf ( SQLCode <> 0 ) And ( SQLCode <> 100 );
+   // Set stae for error, all of them
    State = '38998';
    Exec SQL GET DIAGNOSTICS CONDITION 1 :ErrorMsg = MESSAGE_TEXT;
+
  Else;
+   // Everything is okay, lets get the devd-informations
    QDCRDEVD(F_DEVD0600_DS :%Size(F_DEVD0600_DS) :'DEVD0600'
             :DeviceName :ErrorValue);
+
    If ( TextDescription = '' );
      TextDescription = %TrimR(F_DEVD0600_DS.TextDescription);
    EndIf;
+
    If ( F_DEVD0600_DS.LastActivityDate <> '' );
-     Exec SQL SET :LastActivityDate =
-               DATE(TO_DATE(RIGHT(:F_DEVD0600_DS.LastActivityDate, 6), 'YYMMDD'));
+     LastActivityDate = translateDate(F_DEVD0600_DS.LastActivityDate);
    EndIf;
+
  EndIf;
 
 END-PROC;
 
-//---
+//#########################################################################
 DCL-PROC closeReader;
 
  Exec SQL CLOSE display_device_description_reader;
+
+END-PROC;
+
+//#########################################################################
+DCL-PROC translateDate;
+ // Translate system date to real date
+ //  Use first digit to determine century (0=19, 1=20)
+ DCL-PI *N DATE;
+  pDateIn CHAR(7) CONST;
+ END-PI;
+
+ DCL-S WorkDate DATE INZ;
+ DCL-S WorkChar CHAR(8) INZ;
+ //------------------------------------------------------------------------
+
+ Select;
+   When ( %SubSt(pDateIn :1 :1) = '0' );
+     WorkChar = '19' + %SubSt(pDateIn :2 :6);
+
+   When ( %SubSt(pDateIn :1 :1) = '1' );
+     WorkChar = '20' + %SubSt(pDateIn :2 :6);
+
+ EndSl;
+
+ Exec SQL SET :WorkDate = DATE(TO_DATE(:WorkChar, 'YYYYMMDD'));
+ If ( SQLCode <> 0 );
+   Reset WorkDate;
+ EndIf;
+
+ Return WorkDate;
 
 END-PROC;

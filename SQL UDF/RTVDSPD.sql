@@ -1,4 +1,4 @@
-/*
+﻿/*
 COPYRIGHT (c)2021 Christian Brunner
 
 Executes an system command. Using qcmdexc
@@ -18,7 +18,7 @@ returns table
  devicename varchar(10),
  devicecategory varchar(10),
  textdescription varchar(50),
- lastactivitydate DATE
+ lastactivitydate date
 )
 
 external name 'BRUNNER/RTVDSPDRG (RTVDSPVRTDEVD)'
