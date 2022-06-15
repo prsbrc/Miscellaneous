@@ -107,7 +107,7 @@ DCL-PROC printPDFToPrinter;
 
  If Not %Error();
 
-   If ( ifsAccess(pPathName :F_OK) = 0 );
+   If ( ifsAccess(%TrimR(pPathName) :F_OK) = 0 );
 
      FileHandler = ifsOpen(%TrimR(pPathName) :O_RDONLY );
 
