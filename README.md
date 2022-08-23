@@ -1,3 +1,5 @@
+```Call import by update status field``` is a example for start an import over trigger and dataqueues 
+
 ```COPY_SPOOLEDFILE_TO_PDF``` is a SQL-UDF to copy spooled files to PDF-files within the IFS.
 It return 0 for success and -1 for failure
 Example:
