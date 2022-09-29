@@ -1,0 +1,19 @@
+             PGM        PARM(&COMMAND)
+             INCLUDE    SRCMBR(COPYRIGHT) SRCFILE(GHP3MOD/QCLSRC)
+             DCLPRCOPT  LOG(*NO) ALWRTVSRC(*NO) USRPRF(*OWNER) +
+                          AUT(*USE) DFTACTGRP(*NO) ACTGRP(*CALLER)
+             DCL        VAR(&COMMAND) TYPE(*CHAR) LEN(256)
+             STRPCO     PCTA(*NO)
+             MONMSG     MSGID(CPF0000)
+
+             DLYJOB     DLY(1)
+
+             CHGVAR     VAR(&COMMAND) VALUE('explorer.exe +
+                          "\\10.1.1.1\' *TCAT &COMMAND *TCAT '"')
+
+             STRPCCMD   PCCMD(&COMMAND) PAUSE(*NO)
+             MONMSG     MSGID(CPF0000)
+
+             RETURN
+
+             ENDPGM
