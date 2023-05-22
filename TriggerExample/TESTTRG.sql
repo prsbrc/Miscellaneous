@@ -1,0 +1,11 @@
+CREATE OR REPLACE TABLE yourlib.TESTTRG 
+(
+	DIVI CHAR (1 ) NOT NULL,
+	CUNO BIGINT NOT NULL,
+	NAME1 CHAR ( 30) NOT NULL,
+	NAME2 CHAR ( 30),
+	STREET CHAR ( 30),
+	ZIP CHAR ( 10),
+	CITY CHAR ( 30) NOT NULL,
+	COUNTRY CHAR ( 2) NOT NULL
+);                                                         
